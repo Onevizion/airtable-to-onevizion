@@ -8,7 +8,9 @@ installed_dependencies = subprocess.check_output([sys.executable, '-m', 'pip', '
 if 'Successfully installed' in installed_dependencies:
     raise Exception('Some required dependent libraries were installed. ' \
                     'Module execution has to be terminated now to use installed libraries on the next scheduled launch.')
+print("*************")
 print(installed_dependencies)
+print("*************")
 with open('settings.json', 'rb') as settings_file:
     settings_data = json.loads(settings_file.read().decode('utf-8'))
 
