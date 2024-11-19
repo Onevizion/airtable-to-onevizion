@@ -1,0 +1,44 @@
+{
+	"creds": 
+		{"OvUrl":"xxx.onevizion.com",
+		"OvAccessKey":"***",
+		"OvSecretKey":"*****",
+		"AirtableToken":"************************"
+		},
+	"tables":
+		[
+			{
+				"table_name":"svlink",
+				"base_id":"appXXXXXXXXX",
+				"formula":"{WBS #}",
+				"fields": {
+					"Site #": {
+						"fieldname":"Site #", 
+						"conditionalfield":"", 
+						"conditionalvalue":""
+					},
+					"P_WBS_NUMBER":{
+						"fieldname":"WBS #", 
+						"conditionalfield":"", 
+						"conditionalvalue":""
+					},
+					"P_AF6780":{
+						"fieldname":"Scheduled Date", 
+						"conditionalfield":"Tracking status", 
+						"conditionalvalue":"completed"
+					},
+					"P_MAT_REL_SUB_TO_WH":{
+						"fieldname":"Received Date", 
+						"conditionalfield":"", 
+						"conditionalvalue":""
+					}
+				},
+				"import":{
+					"impspecid":"100006947",
+					"importname":"Project Airtable",
+					"action":"INSERT_UPDATE",
+					"maxruntime":20
+				}
+			}
+		]
+	}
