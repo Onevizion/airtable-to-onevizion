@@ -70,40 +70,44 @@ def runAndWaitForImport(
 
 def run_module(settings):
 
-    api = Api(settings["creds"]["AirtableToken"])
+	api = Api(settings["creds"]["AirtableToken"])
 
-    for tbl in settings["tables"]:
-        print(tbl)
-        table = api.table(base_id=tbl["base_id"],table_name=tbl["table_name"])
-        fields = []
-        for f in tbl["fields"]:
-            fields.append(f)
-        df = pd.DataFrame(dtype=str,columns=fields)
-        for row in table.all(formula=tbl["formula"]):
-            print(row)
-            a = {}
-            for f in tbl["fields"]:
-                fieldname = tbl["fields"][f]["fieldname"]
-                conditionalfield = tbl["fields"][f]["conditionalfield"]
-                conditionalvalue = tbl["fields"][f]["conditionalvalue"]
-                print(fieldname,conditionalfield,conditionalvalue)
+	for tbl in settings["tables"]:
+		print(tbl)
+		table = api.table(base_id=tbl["base_id"],table_name=tbl["table_name"])
+		fields = []
+		for f in tbl["fields"]:
+			fields.append(f)
+		df = pd.DataFrame(dtype=str,columns=fields)
+		for row in table.all(formula=tbl["formula"]):
+			#print(row)
+			a = {}
+			for f in tbl["fields"]:
+				fieldname = tbl["fields"][f]["fieldname"]
+				conditionalfield = tbl["fields"][f]["conditionalfield"]
+				conditionalvalue = tbl["fields"][f]["conditionalvalue"]
+				print(fieldname,conditionalfield,conditionalvalue)
 
-                if len(conditionalfield)>0:
-                    if row["fields"][conditionalfield] == conditionalvalue:
-                        a[f]=row["fields"][fieldname]
-                    else:
-                        a[f]=""
-                else:
-                    a[f]=row["fields"][fieldname]
-            df.loc[len(df)] = a
-        print(df)
-        df.to_csv('xx.csv', index=False)
-        runAndWaitForImport(
-              filename='xx.csv',
-              impspec=tbl["import"]["impspecid"],
-              action=tbl["import"]["action"],
-              maxRunTimeInMinutes=tbl["import"]["maxruntime"],
-              OvUserName=settings["creds"]["OvAccessKey"],
-              OvPassword=settings["creds"]["OvSecretKey"],
-              OvUrl=settings["creds"]["OvUrl"]
-              )
+				if fieldname in row["fields"]:
+					if len(conditionalfield)>0:
+						if row["fields"][conditionalfield] == conditionalvalue:
+							a[f]=row["fields"][fieldname]
+						else:
+							a[f]=""
+					else:
+						a[f]=row["fields"][fieldname]
+				else:
+					a[f]=""
+			df.loc[len(df)] = a
+		print(df)
+		print(tbl["formula"])
+		df.to_csv('xx.csv', index=False)
+		runAndWaitForImport(
+			  filename='xx.csv',
+			  impspec=tbl["import"]["impspecid"],
+			  action=tbl["import"]["action"],
+			  maxRunTimeInMinutes=tbl["import"]["maxruntime"],
+			  OvUserName=settings["creds"]["OvAccessKey"],
+			  OvPassword=settings["creds"]["OvSecretKey"],
+			  OvUrl=settings["creds"]["OvUrl"]
+			  )
